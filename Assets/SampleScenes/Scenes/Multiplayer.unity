@@ -1014,8 +1014,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 341}
-  m_SizeDelta: {x: 894.3, y: 549.1}
+  m_AnchoredPosition: {x: 0, y: -0.01173}
+  m_SizeDelta: {x: 894.3, y: 1313.2}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &306737670
 GameObject:
@@ -1567,8 +1567,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 341}
-  m_SizeDelta: {x: 894.3, y: 549.1}
+  m_AnchoredPosition: {x: 0, y: -20.527}
+  m_SizeDelta: {x: 894.3, y: 1272.2}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &489133608
 MonoBehaviour:
@@ -1592,10 +1592,10 @@ MonoBehaviour:
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_FontData:
     m_Font: {fileID: 12800000, guid: 8926ebc22258942448ee7c5f3095a96c, type: 3}
-    m_FontSize: 116
+    m_FontSize: 90
     m_FontStyle: 0
     m_BestFit: 0
-    m_MinSize: 10
+    m_MinSize: 9
     m_MaxSize: 121
     m_Alignment: 4
     m_AlignByGeometry: 0
@@ -7802,6 +7802,7 @@ MonoBehaviour:
   rows: 0
   scoreCanvas: {fileID: 1505977048}
   scoreDisplay: {fileID: 268258911}
+  feedbackBox: {fileID: 1819502652}
   canvas: {fileID: 2110056110}
   font: {fileID: 12800000, guid: c739003f962aba54d9547be8bb63f4fe, type: 3}
   parentCanvas: {fileID: 1158879890}

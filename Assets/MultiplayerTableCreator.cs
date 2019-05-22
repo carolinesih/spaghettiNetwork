@@ -25,6 +25,7 @@ public class MultiplayerTableCreator : MonoBehaviour
     public static float startTime;
     public GameObject scoreCanvas;
     public GameObject scoreDisplay;
+    public GameObject feedbackBox;
     public GameObject canvas;
     public Font font;
     float startX = 250;
@@ -47,6 +48,7 @@ public class MultiplayerTableCreator : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+        feedbackBox = GameObject.Find("Feedback Box");
         canvas.AddComponent<RectTransform>();
         canvas.AddComponent<Canvas>();
         canvas.AddComponent<CanvasScaler>();
@@ -101,6 +103,7 @@ public class MultiplayerTableCreator : MonoBehaviour
             }
             else
             {
+                feedbackBox.GetComponent<Text>().text = "";
                 canvas.SetActive(false);
                 scoreCanvas.SetActive(true);
                 Text scoreText = scoreDisplay.GetComponent<Text>();

@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 public class NetworkSpaghetti : NetworkBehaviour
 {
+    float feedbackTime;
     GameObject feedbackBox;
     [SyncVar]
     public string playername;
@@ -18,6 +19,7 @@ public class NetworkSpaghetti : NetworkBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        feedbackTime = Time.time;
         feedbackBox = GameObject.Find("Feedback Box");
     }
 
@@ -27,6 +29,11 @@ public class NetworkSpaghetti : NetworkBehaviour
         if(!isLocalPlayer)
         {
             return;
+        }
+        if(Time.time - feedbackTime > 5)
+        {
+            feedbackBox.GetComponent<Text>().text = "";
+            feedbackTime = Time.time;
         }
         MultiplayerTableCreator.score = score;
         if(MultiplayerEnter.sendInv == true)
@@ -105,6 +112,7 @@ public class NetworkSpaghetti : NetworkBehaviour
     [ClientRpc]
     public void RpcupdateFeedBack(string message, bool scoring)
     {
+        feedbackTime = Time.time;
         if(isLocalPlayer)
         {
             feedbackBox.GetComponent<Text>().text = message;
