@@ -18,5 +18,9 @@ public class MultiplayerTimeBar : MonoBehaviour
         {
             this.GetComponent<RectTransform>().sizeDelta = new Vector2(101.39f * (1 - (Time.time - MultiplayerTableCreator.startTime) / MultiplayerTableCreator.timeLimit), 63.7f);
         }
+        else
+        {
+            this.GetComponent<RectTransform>().sizeDelta = new Vector2(101.39f, 63.7f);
+        }
     }
 }

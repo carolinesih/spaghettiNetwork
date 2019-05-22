@@ -19,7 +19,9 @@ public class JSONParser {
     public JSONParser(string s)
     {
         string json = s;
+        MultiplayerTableCreator.LogMessage += "JsonParse line 21\n";
         Message m = JsonConvert.DeserializeObject<Message>(json);
+        MultiplayerTableCreator.LogMessage += "JsonParse line 23\n";
         this.result = m.result;
     }
 

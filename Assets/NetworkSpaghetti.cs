@@ -26,14 +26,13 @@ public class NetworkSpaghetti : NetworkBehaviour
     {
         if(!isLocalPlayer)
         {
-            MultiplayerTableCreator.opponent = score;
             return;
         }
         MultiplayerTableCreator.score = score;
         if(MultiplayerEnter.sendInv == true)
         {
             MultiplayerEnter.sendInv = false;
-            CmdEnter(GetInputExpression.exp);
+            CmdEnter(GetInputExpression.exp, MultiplayerTableCreator.LogMessage);
         }
         if(MultiplayerEnter.needClear == true)
         {
@@ -43,7 +42,7 @@ public class NetworkSpaghetti : NetworkBehaviour
 
     }
     [Command]
-    public void CmdEnter(string exp)
+    public void CmdEnter(string exp, string message)
     {
         string responseJSONS = CallServer.Sim(exp, MultiplayerTableCreator.variableJSON);
         responseJSONS = CallServer.ToSimplify(responseJSONS);
@@ -55,7 +54,7 @@ public class NetworkSpaghetti : NetworkBehaviour
         if (sampleString == "true")
         {
             Debug.Log("Tautology, not accepted");
-            RpcupdateFeedBack("Tautology not accepted. Try again!");
+            RpcupdateFeedBack("Tautology not accepted. Try again!", false);
             return;
         }
         if (MultiplayerEnter.acceptedInv.Count > 0)
@@ -63,12 +62,12 @@ public class NetworkSpaghetti : NetworkBehaviour
             if (CallServer.Implied(responseJSONS, MultiplayerEnter.acceptedInv, MultiplayerTableCreator.variableJSON) == true)
             {
                 Debug.Log("Implied statement, not accepted");
-                RpcupdateFeedBack("Implied statement not accepted. Try again!");
+                RpcupdateFeedBack("Implied statement not accepted. Try again!",false);
                 return;
             }
         }
         Json = responseJSONS;
-        RpcupdateFeedBack("Invariant accepted. Nice work!");
+        RpcupdateFeedBack("Invariant accepted. Nice work!", true);
         temp = exp;
         //tableCreatorInstance.counter++;
 
@@ -104,11 +103,19 @@ public class NetworkSpaghetti : NetworkBehaviour
         GetInputExpression.exp = "";
     }
     [ClientRpc]
-    public void RpcupdateFeedBack(string message)
+    public void RpcupdateFeedBack(string message, bool scoring)
     {
         if(isLocalPlayer)
         {
             feedbackBox.GetComponent<Text>().text = message;
+        }
+        else
+        {
+            if (scoring == true)
+            {
+                feedbackBox.GetComponent<Text>().text = "Your opponent have entered a new invarient!";
+                MultiplayerTableCreator.opponent++;
+            }
         }
     }
 }

@@ -17,14 +17,17 @@ public class MultiplayerEnter : MonoBehaviour
         needClear = true;
         var tableCreatorInstance = tableCreator.GetComponent<MultiplayerTableCreator>();
         Debug.Log("Entered");
+        int x = 0;
         for (int i = 0; i < tableCreatorInstance.rows; i++)
         {
+            x++;
             if (tableCreatorInstance.textArray[i, tableCreatorInstance.cols - 1].GetComponent<Text>().text != "True")
             {
                 Debug.Log("returning");
                 return;
             }
         }
+        MultiplayerTableCreator.LogMessage += "Result checked: " + x + "\n";
         sendInv = true;
         temp = GetInputExpression.exp;
     }

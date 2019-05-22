@@ -19,10 +19,12 @@ public class MultiplayerTableCreator : MonoBehaviour
 
     int[][][] data;
     string[] variables;
-
+    public static string LogMessage = "";
     public int cols;
     public int rows;
     public static float startTime;
+    public GameObject scoreCanvas;
+    public GameObject scoreDisplay;
     public GameObject canvas;
     public Font font;
     float startX = 250;
@@ -45,10 +47,17 @@ public class MultiplayerTableCreator : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+        canvas.AddComponent<RectTransform>();
+        canvas.AddComponent<Canvas>();
+        canvas.AddComponent<CanvasScaler>();
+        canvas.AddComponent<GraphicRaycaster>();
         currentJson = CallServer.ExecuteServerCall();
+        LogMessage += "Current Json: " + currentJson + "\n";
         json = new JSONParser(currentJson);
+        LogMessage += "MTC line 55\n";
         startTime = Time.time;
         LoadTable(json);
+
     }
 
     // Update is called once per frame
@@ -74,8 +83,30 @@ public class MultiplayerTableCreator : MonoBehaviour
 
         if (Time.time - startTime > timeLimit&&SpaghettiGameManager.counter>0)
         {
-           
-                displayMultiScore();
+
+
+            if (Time.time - startTime > (timeLimit + 10))
+            {
+                canvas.SetActive(true);
+                MultiplayerEnter.acceptedInv.Clear();
+                scoreCanvas.SetActive(false);
+                ClearTable();
+                GameObject.Destroy(panel);
+                SpaghettiGameManager.counter = 0;
+                startTime = Time.time;
+                UpdateInv.Inv = "Invarients\n";
+                currentJson = CallServer.ExecuteServerCall();
+                json = new JSONParser(currentJson);
+                LoadTable(json);
+            }
+            else
+            {
+                canvas.SetActive(false);
+                scoreCanvas.SetActive(true);
+                Text scoreText = scoreDisplay.GetComponent<Text>();
+                scoreText.text = "Your score: " + score + "\nYour Opponent: "+ opponent;
+
+            }
         }
 
         for (int i = 0; i < rows; i++)
@@ -119,7 +150,13 @@ public class MultiplayerTableCreator : MonoBehaviour
     {
         SceneManager.LoadScene("MultiScore");
     }
-
+    void RemoveAllChildren()
+    {
+        foreach(Transform child in canvas.transform)
+        {
+            GameObject.Destroy(child);
+        }
+    }
     void ClearTable()
     {
         for (int i = 0; i < variables.Length + 1; i++)
@@ -137,19 +174,18 @@ public class MultiplayerTableCreator : MonoBehaviour
 
     void LoadTable(JSONParser json)
     {
-        canvas.AddComponent<RectTransform>();
+        LogMessage += "MTC line 160\n";
         canvas.name = "Table Canvas";
         data = json.result.data;
         variables = json.result.variables;
         cols = variables.Length + 1; // num of vars, also data[0][0].Length
         rows = data[0].Length; // num of data points
+        LogMessage += "Cols: " + cols + " Rows: " + rows + "\n";
         textArray = new GameObject[rows, cols];
         varArray = new GameObject[1, cols];
         variableColor = new Color(247, 123, 85, 255);
         canvas.GetComponent<RectTransform>().sizeDelta = new Vector2(startX * 2 + xDiff * (cols + 1), yDiff * rows);
-        canvas.AddComponent<Canvas>();
-        canvas.AddComponent<CanvasScaler>();
-        canvas.AddComponent<GraphicRaycaster>();
+
         canvas.GetComponent<Canvas>().renderMode = RenderMode.ScreenSpaceOverlay;
         panel = new GameObject();
         panel.transform.SetParent(canvas.transform);
@@ -171,6 +207,7 @@ public class MultiplayerTableCreator : MonoBehaviour
         else
             scale = heightScale;
         panel.GetComponent<RectTransform>().localScale = new Vector3(scale, scale, 1);
+        LogMessage += "MTC line 190\n";
         // making variables and variable buttons
         for (int i = 0; i < variables.Length; i++)
         {
@@ -181,9 +218,11 @@ public class MultiplayerTableCreator : MonoBehaviour
             newObj.transform.SetParent(panel.transform);
             newObj.name = variables[i];
             newObj.AddComponent<RectTransform>();
-            newObj.GetComponent<RectTransform>().sizeDelta = new Vector2(200, 180);
+            newObj.GetComponent<RectTransform>().sizeDelta = new Vector2(200, 120);
+            newObj.GetComponent<RectTransform>().localScale = new Vector3(scale, scale, 1);
             textObj.AddComponent<RectTransform>();
-            textObj.GetComponent<RectTransform>().sizeDelta = new Vector2(200, 180);
+            textObj.GetComponent<RectTransform>().sizeDelta = new Vector2(200, 120);
+            
             Button varButton = newObj.AddComponent<Button>();
             Image buttonImage = newObj.AddComponent<Image>();
             buttonImage.color = new Color(1f, 1f, 1f, 1f);
@@ -200,6 +239,7 @@ public class MultiplayerTableCreator : MonoBehaviour
             textArray[0, i] = newObj;
             varArray[0, i] = newObj;
             textObj.transform.SetParent(newObj.transform);
+            textObj.GetComponent<RectTransform>().localScale = new Vector3(scale, scale, 1);
             Text myText = textObj.AddComponent<Text>();
             myText.text = variables[i];
             myText.fontSize = 91;
@@ -207,17 +247,19 @@ public class MultiplayerTableCreator : MonoBehaviour
             myText.alignment = TextAnchor.MiddleCenter;
             myText.color = Color.gray;//variableColor;
             textArray[0, i].transform.localPosition = new Vector3(startX + (xDiff * i) - xDelta, startY + yDiff - yDelta, 0);
+            
             Navigation customNav = new Navigation();
             customNav.mode = Navigation.Mode.Automatic;
             varButton.navigation = customNav;
         }
-
+        LogMessage += "MTC line 237\n";
         // results
         GameObject obj = new GameObject();
         obj.transform.SetParent(panel.transform);
         obj.name = "result";
         obj.AddComponent<RectTransform>();
         obj.GetComponent<RectTransform>().sizeDelta = new Vector2(400, 225);
+        obj.GetComponent<RectTransform>().localScale = new Vector3(scale, scale, 1);
         textArray[0, variables.Length] = obj;
         varArray[0, variables.Length] = obj;
         Text text = obj.AddComponent<Text>();
@@ -238,6 +280,7 @@ public class MultiplayerTableCreator : MonoBehaviour
                 newObj.name = "(" + i + ", " + j + ")";
                 newObj.AddComponent<RectTransform>();
                 newObj.GetComponent<RectTransform>().sizeDelta = new Vector2(400, 225);
+                newObj.GetComponent<RectTransform>().localScale = new Vector3(scale, scale, 1);
                 textArray[i, j] = newObj;
                 Text myText = newObj.AddComponent<Text>();
                 if (j == cols - 1)
@@ -284,6 +327,7 @@ public class MultiplayerTableCreator : MonoBehaviour
         }
         variableJSON = variableJSON.Substring(0, variableJSON.Length - 1);
         variableJSON += '}';
+        LogMessage += "VariableJson" + variableJSON + "\n";
 
     }
 }
