@@ -96,7 +96,7 @@ public class MultiplayerTableCreator : MonoBehaviour
                 GameObject.Destroy(panel);
                 SpaghettiGameManager.counter = 0;
                 startTime = Time.time;
-                UpdateInv.Inv = "Invarients\n";
+                UpdateInv.Inv = "Invariants\n";
                 currentJson = CallServer.ExecuteServerCall();
                 json = new JSONParser(currentJson);
                 LoadTable(json);
