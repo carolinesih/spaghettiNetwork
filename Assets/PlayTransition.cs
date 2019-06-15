@@ -5,7 +5,7 @@ public class PlayTransition : MonoBehaviour
 {
     public void RunSinglePlayer()
     {
-        SceneManager.LoadScene("SinglePlayer");
+        SceneManager.LoadScene("SampleScene");
     }
 
     public void RunMultiPlayer()

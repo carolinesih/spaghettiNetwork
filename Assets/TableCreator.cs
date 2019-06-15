@@ -116,7 +116,7 @@ public class TableCreator : MonoBehaviour
 
     void displaySingleScore()
     {
-        SceneManager.LoadScene("SingleScore");
+        SceneManager.LoadScene("DisplayScore");
     }
 
 

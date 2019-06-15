@@ -18,7 +18,7 @@ public class NextLevel : MonoBehaviour
         //}
         TableCreator.counter = 0;
         TableCreator.score = 0;
-        SceneManager.LoadScene("SinglePlayer");
+        SceneManager.LoadScene("SampleScene");
     }
 
     public void ChangeMultiLevel()
@@ -31,6 +31,6 @@ public class NextLevel : MonoBehaviour
 
     public void OpenMainMenu()
     {
-        SceneManager.LoadScene("StartMenu");
+        SceneManager.LoadScene("MainMenu");
     }
 }
